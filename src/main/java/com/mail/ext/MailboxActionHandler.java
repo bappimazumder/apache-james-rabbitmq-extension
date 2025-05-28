@@ -41,16 +41,23 @@ public class MailboxActionHandler {
                     session
             );
 
+            if (messages.isEmpty()) {
+                throw new IllegalStateException("No message found with ID: " + messageId);
+            }
+
+            MessageResult messageResult = messages.get(0);
+            MessageUid messageUid = messageResult.getUid();
+
             switch (payload.getAction()) {
                 case Trash -> {
                    //  MailboxPath trashPath = MailboxPath.forUser(session.getUser().asString(), "Trash");
                     MailboxPath trashPath = MailboxPath.forUser(session.getUser(), "Trash");
-                    return moveMessage(session, sourcePath, trashPath, messageId);
+                    return moveMessage(session, sourcePath, trashPath, messageUid);
                 }
                 case Move -> {
                     // MailboxPath destPath = MailboxPath.forUser(session.getUser().asString(), payload.getDestinationMailboxID());
                     MailboxPath destPath = MailboxPath.forUser(session.getUser(), payload.getDestinationMailboxID());
-                    return moveMessage(session, sourcePath, destPath, messageId);
+                    return moveMessage(session, sourcePath, destPath, messageUid);
                 }
                 default -> throw new IllegalArgumentException("Unknown action");
             }
@@ -60,11 +67,11 @@ public class MailboxActionHandler {
         }
     }
 
-    private boolean moveMessage(MailboxSession session, MailboxPath source, MailboxPath dest, MessageId msgId) {
+    private boolean moveMessage(MailboxSession session, MailboxPath source, MailboxPath dest,MessageUid uid) {
         try {
             MessageManager sourceManager = mailboxManager.getMailbox(source, session);
             MessageManager destManager = mailboxManager.getMailbox(dest, session);
-            MessageResult message = sourceManager.getMessages(MessageRange.one(msgId), FetchGroup.MINIMAL, session).next();
+            MessageResult message = sourceManager.getMessages(MessageRange.one(uid), FetchGroup.MINIMAL, session).next();
 
             destManager.appendMessage(
                     message.getFullContent().getInputStream(),
@@ -73,7 +80,8 @@ public class MailboxActionHandler {
                     false,
                     new Flags(Flags.Flag.SEEN)
             );
-            sourceManager.deleteMessages(MessageRange.one(msgId), session);
+
+            sourceManager.delete(List.of(uid), session);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

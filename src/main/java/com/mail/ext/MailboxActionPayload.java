@@ -1,10 +1,6 @@
 package com.mail.ext;
 
 public class MailboxActionPayload {
-    public enum Action {
-        Trash, Move
-    }
-
     private Action action;
     private String sourceMailboxID;
     private String sourceMessageID;

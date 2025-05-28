@@ -1,9 +1,13 @@
 plugins {
-    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'com.mail.ext.TestMain'
 }
 
 group = 'com.mail.ext'
-version = '1.0'
+version = ''
 
 repositories {
     mavenCentral()
@@ -12,10 +16,12 @@ repositories {
 dependencies {
     implementation 'com.rabbitmq:amqp-client:5.18.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
-    implementation 'org.apache.james:apache-james-mailbox-api:3.8.0'
-    implementation 'org.apache.james:apache-james-mailbox-store:3.7.3'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.apache.james:apache-james-mailbox-api:3.8.2'
+    implementation 'org.apache.james:apache-james-mailbox-store:3.8.2'
+    implementation 'org.apache.james:james-server-lifecycle-api:3.8.2'
+    implementation 'com.google.inject:guice:5.1.0'
+    //testImplementation platform('org.junit:junit-bom:5.10.0')
+    //testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
 test {
