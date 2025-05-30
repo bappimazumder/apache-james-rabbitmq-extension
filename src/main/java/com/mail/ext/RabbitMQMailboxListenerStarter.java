@@ -1,11 +1,14 @@
 
 package com.mail.ext;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.apache.james.mailbox.MailboxManager;
 import com.rabbitmq.client.*;
 import org.apache.james.mailbox.MessageIdManager;
 
 import org.apache.james.lifecycle.api.Startable;
+import org.apache.james.modules.data.MemoryDataModule;
 
 import javax.inject.Inject;
 
@@ -36,20 +39,23 @@ public class RabbitMQMailboxListenerStarter implements Startable {
             channel.exchangeDeclare(exchange, BuiltinExchangeType.FANOUT, true);
             channel.queueDeclare(queue, true, false, false, null);
 
-            /*MailboxActionHandler handler = new MailboxActionHandler(
+            MailboxActionHandler handler = new MailboxActionHandler(
                     mailboxManager,
                     messageIdManager,
                     channel,
                     exchange
-            );*/
+            );
 
-           /* RabbitMQMailboxListener listener = new RabbitMQMailboxListener(rabbitHost, handler);
-            listener.startListening(queue);*/
+           // MailboxActionHandler handler = new MailboxActionHandler();
+
+            RabbitMQMailboxListener listener = new RabbitMQMailboxListener(rabbitHost, handler);
+            listener.startListening(queue);
 
             System.out.println("📡 RabbitMQMailboxListener started");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }
 

@@ -20,6 +20,8 @@ dependencies {
     implementation 'org.apache.james:apache-james-mailbox-store:3.8.2'
     implementation 'org.apache.james:james-server-lifecycle-api:3.8.2'
     implementation 'com.google.inject:guice:5.1.0'
+    implementation 'org.apache.james:james-server-memory-guice:3.6.2'
+   // implementation 'org.apache.james:james-server-mailetcontainer-guice:3.6.2'
     //testImplementation platform('org.junit:junit-bom:5.10.0')
     //testImplementation 'org.junit.jupiter:junit-jupiter'
 }
